@@ -27,13 +27,13 @@ Go to Systems Manager on the AWS Web console in the eu-west-1 region.
 - Select your Dev instances (studentxx-dev-instance) and click Start Session
 
 - In Terminal Session window for Test Instance, now you can test the internet reachability via following shell commands:
-  - Test the connect to the Internet:
+  - Test the connection to the Internet:
     - ping 1.1.1.1
     - links https://www.checkmyip.com
     - NOTE: The Public IP Address displayed would be the NAT-GW from Egress VPC.
-  - Test the connect to the Prod VPC: 
+  - Test the connection to the Prod VPC: 
     - ping \<ip\> (lookup IP of studentxx-prod-instance in EC2 Management Console)
-  - Test the connect to the Shared VPC:
+  - Test the connection to the Shared VPC:
     - ping \<ip\> (lookup IP of studentxx-shared-instance in EC2 Management Console)
 
 As you can see it does not work. We need to setup Transit Gateway, so the first step is to create a Transit Gateway
@@ -120,7 +120,8 @@ Create the Transit Gateway Route Table for Egress and Shared VPC:
   - Transit Gateway ID: Select the Transit Gateway that you created earlier (studentxx-transit-gateway)
   - Create
 
-Wait for the creation until the state becomes available (refresh)
+Wait for the creation until the state becomes available (refresh). 
+
 Now we can associate the Egress and Shared VPC (attachment) to this routing table, so they will use this routing table when traffic is being directed to the Transit Gateway:
 - Select the route table (studentxx-shared-routing-table) > Associations tab > Create propagation
   - Choose attachment to associate: Select the Egress Transit Gateway Attachment that you just created (studentxx-egress-attachment)
@@ -147,7 +148,8 @@ Select the Routes tab to see all 4 routes. The Egress VPC and Shared VPCs are re
   - Transit Gateway ID: Select the Transit Gateway that you created earlier (studentxx-transit-gateway)
   - Create
 
-Wait for the creation until the state becomes available (refresh)
+Wait for the creation until the state becomes available (refresh). 
+
 Now we can associate the Dev and Prod VPC (attachment) to this routing table, so they will use this routing table when traffic is being directed to the Transit Gateway:
   - Select the route table (studentxx-isolated-routing-table) > Associations tab > Create propagation
     - Choose attachment to associate: Select the Dev Transit Gateway Attachment that you just created (studentxx-dev-attachment)
@@ -198,13 +200,13 @@ Go to Systems Manager on the AWS Web console in the eu-west-1 region.
 - Select your Dev instances (studentxx-dev-instance) and click Start Session
 
 - In Terminal Session window for Test Instance, now you can test the internet reachability via following shell commands:
-  - Test the connect to the Internet:
+  - Test the connection to the Internet:
     - ping 1.1.1.1
     - links https://www.checkmyip.com
     - NOTE: The Public IP Address displayed would be the NAT-GW from Egress VPC.
-  - Test the connect to the Prod VPC: 
+  - Test the connection to the Prod VPC: 
     - ping \<ip\> (lookup IP of studentxx-prod-instance in EC2 Management Console)
-  - Test the connect to the Shared VPC:
+  - Test the connection to the Shared VPC:
     - ping \<ip\> (lookup IP of studentxx-shared-instance in EC2 Management Console)
 
 
