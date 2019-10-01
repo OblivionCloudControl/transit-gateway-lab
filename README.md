@@ -203,9 +203,9 @@ Go to Systems Manager on the AWS Web console in the eu-west-1 region.
     - links https://www.checkmyip.com
     - NOTE: The Public IP Address displayed would be the NAT-GW from Egress VPC.
   - Test the connect to the Prod VPC: 
-    - ping <ip of studentxx-prod-instance> (lookup IP in EC2 Management Console)
+    - ping \<ip\> (lookup IP of studentxx-prod-instance in EC2 Management Console)
   - Test the connect to the Shared VPC:
-    - ping <ip of studentxx-shared-instance> (lookup IP in EC2 Management Console)
+    - ping \<ip\> (lookup IP of studentxx-shared-instance in EC2 Management Console)
 
 
 
