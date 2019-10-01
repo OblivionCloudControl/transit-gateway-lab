@@ -24,7 +24,7 @@ Go to Systems Manager on the AWS Web console in the eu-west-1 region.
 
 - Click on "Session Manager" under "Actions"
 - Click on "Start Session"
-- Select your Dev instances (studentxx-dev-instance) and click Start Session
+- Select your Dev instance (studentxx-dev-instance) and click Start Session
 
 - In Terminal Session window for Test Instance, now you can test the internet reachability via following shell commands:
   - Test the connection to the Internet:
@@ -123,13 +123,14 @@ Create the Transit Gateway Route Table for Egress and Shared VPC:
 Wait for the creation until the state becomes available (refresh). 
 
 Now we can associate the Egress and Shared VPC (attachment) to this routing table, so they will use this routing table when traffic is being directed to the Transit Gateway:
-- Select the route table (studentxx-shared-routing-table) > Associations tab > Create propagation
+- Select the route table (studentxx-shared-routing-table) > Associations tab > Create association
   - Choose attachment to associate: Select the Egress Transit Gateway Attachment that you just created (studentxx-egress-attachment)
-- Select the route table (studentxx-shared-routing-table) route table > Associations tab > Create association
+- Select the route table (studentxx-shared-routing-table) > Associations tab > Create association
   - Choose attachment to associate: Select the Shared Transit Gateway Attachment that you just created (studentxx-shared-attachment)
 
 The VPCs are ready to use the routing table, but the routing table does not contain any routes yet. For this shared routing table we need to create a static default route, because we want the Shared VPC to be able to connect to the Internet through the Egress VPC:
 - Select the route table (studentxx-shared-routing-table) > Routes tab > Create route
+  - CIDR: 0.0.0.0/0
   - Choose attachment: Select the Egress Transit Gateway Attachment that you just created (studentxx-egress-attachment)
 
 We also need the dynamic routes to all of the other VPCs (Dev, Prod and Shared), so we need to create the propagation for each VPC:
@@ -151,13 +152,14 @@ Select the Routes tab to see all 4 routes. The Egress VPC and Shared VPCs are re
 Wait for the creation until the state becomes available (refresh). 
 
 Now we can associate the Dev and Prod VPC (attachment) to this routing table, so they will use this routing table when traffic is being directed to the Transit Gateway:
-  - Select the route table (studentxx-isolated-routing-table) > Associations tab > Create propagation
+  - Select the route table (studentxx-isolated-routing-table) > Associations tab > Create association
     - Choose attachment to associate: Select the Dev Transit Gateway Attachment that you just created (studentxx-dev-attachment)
-  - Select the route table (studentxx-isolated-routing-table) route table > Associations tab > Create association
+  - Select the route table (studentxx-isolated-routing-table) > Associations tab > Create association
     - Choose attachment to associate: Select the Prod Transit Gateway Attachment that you just created (studentxx-prod-attachment)
 
 The Dev and Prod VPCs are ready to use the routing table, but the routing table does not contain any routes yet. For this isolated routing table we need to create a static default route, because we want the VPCs to be able to connect to the Internet through the Egress VPC:
   - Select the route table (studentxx-isolated-routing-table) > Routes tab > Create route
+    - CIDR: 0.0.0.0/0
     - Choose attachment: Select the Egress Transit Gateway Attachment that you just created (studentxx-egress-attachment)
 
 We also need the dynamic routes to the Shared VPC, because the Dev and Prod VPC need to communicate to Shared VPC. We need to create the propagation for the Shared VPC:
