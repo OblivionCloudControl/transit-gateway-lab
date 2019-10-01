@@ -46,13 +46,13 @@ As you can see it does not work. We need to setup Transit Gateway, so the first 
 **Web Console:**
 
 Go to VPC on the AWS Web console in the eu-west-1 region.
-VPC > Transit Gateway > Create Transit Gateway
-- Name: studentxx-transit-gateway
-- Amazon Side Asn: 64512 (leave default)
-- Default Route Table Association: disable (we don’t want to use the default Transit Gateway route table, we want to use custom ones)
-- Default Route Table Propagation: disable
-- Auto Accept Shared Attachments: enable	
-- Create
+- VPC > Transit Gateway > Create Transit Gateway
+  - Name: studentxx-transit-gateway
+  - Amazon Side Asn: 64512 (leave default)
+  - Default Route Table Association: disable (we don’t want to use the default Transit Gateway route table, we want to use custom ones)
+  - Default Route Table Propagation: disable
+  - Auto Accept Shared Attachments: enable	
+  - Create
 
 
 
@@ -66,40 +66,40 @@ The next step is to attach the different VPCs to the Transit Gateway, so we need
 **Web Console:**
 
 Create the Transit Gateway Attachment for the Egress VPC:
-VPC > Transit Gateway Attachments > Create Transit Gateway Attachment
-- Transit Gateway ID: Select the Transit Gateway that you just created (studentxx-transit-gateway)
-- Attachment type: VPC
-- Attachment name tag: studentxx-egress-attachment
-- VPC ID: studentxx-egress-vpc
-- Subnet IDs: studentxx-egress-private1-subnet
-- Create
+- VPC > Transit Gateway Attachments > Create Transit Gateway Attachment
+  - Transit Gateway ID: Select the Transit Gateway that you just created (studentxx-transit-gateway)
+  - Attachment type: VPC
+  - Attachment name tag: studentxx-egress-attachment
+  - VPC ID: studentxx-egress-vpc
+  - Subnet IDs: studentxx-egress-private1-subnet
+  - Create
 
 Create the Transit Gateway Attachment for the Prod VPC:
-VPC > Transit Gateway Attachments > Create Transit Gateway Attachment
-- Transit Gateway ID: Select the Transit Gateway that you just created (studentxx-transit-gateway)
-- Attachment type: VPC
-- Attachment name tag: studentxx-prod-attachment
-- VPC ID: studentxx-prod-vpc
-- Subnet IDs: studentxx-prod-private1-subnet
-- Create
+- VPC > Transit Gateway Attachments > Create Transit Gateway Attachment
+  - Transit Gateway ID: Select the Transit Gateway that you just created (studentxx-transit-gateway)
+  - Attachment type: VPC
+  - Attachment name tag: studentxx-prod-attachment
+  - VPC ID: studentxx-prod-vpc
+  - Subnet IDs: studentxx-prod-private1-subnet
+  - Create
 
 Create the Transit Gateway Attachment for the Dev VPC:
-VPC > Transit Gateway Attachments > Create Transit Gateway Attachment
-- Transit Gateway ID: Select the Transit Gateway that you just created (studentxx-transit-gateway)
-- Attachment type: VPC
-- Attachment name tag: studentxx-dev-attachment
-- VPC ID: studentxx-dev-vpc
-- Subnet IDs: studentxx-dev-private1-subnet
-- Create
+- VPC > Transit Gateway Attachments > Create Transit Gateway Attachment
+  - Transit Gateway ID: Select the Transit Gateway that you just created (studentxx-transit-gateway)
+  - Attachment type: VPC
+  - Attachment name tag: studentxx-dev-attachment
+  - VPC ID: studentxx-dev-vpc
+  - Subnet IDs: studentxx-dev-private1-subnet
+  - Create
 
 Create the Transit Gateway Attachment for the Shared VPC:
-VPC > Transit Gateway Attachments > Create Transit Gateway Attachment
-- Transit Gateway ID: Select the Transit Gateway that you just created (studentxx-transit-gateway)
-- Attachment type: VPC
-- Attachment name tag: studentxx-shared-attachment
-- VPC ID: studentxx-prod-vpc
-- Subnet IDs: studentxx-prod-private1-subnet
-- Create
+- VPC > Transit Gateway Attachments > Create Transit Gateway Attachment
+  - Transit Gateway ID: Select the Transit Gateway that you just created (studentxx-transit-gateway)
+  - Attachment type: VPC
+  - Attachment name tag: studentxx-shared-attachment
+  - VPC ID: studentxx-prod-vpc
+  - Subnet IDs: studentxx-prod-private1-subnet
+  - Create
 
 ### Step-4 : Create Transit Gateway Routing tables 
 
