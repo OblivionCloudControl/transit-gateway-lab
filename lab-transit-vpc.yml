@@ -1,0 +1,117 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: The template an Egress VPC with a NAT gateway for internet.
+Metadata:
+  AWS::CloudFormation::Interface:
+    ParameterGroups:
+    - Label:
+        default: Lab parameters
+      Parameters:
+        - S3Bucket
+        - StudentId
+        - AmazonLinuxAMI
+    - Label:
+        default: Vpc and Subnet Parameters
+      Parameters:
+        - EgressCidrBlock
+        - DevCidrBlock
+        - DevSubnetCidrBlock
+        - ProdCidrBlock
+        - ProdSubnetCidrBlock
+        - SharedCidrBlock
+        - SharedSubnetCidrBlock
+
+
+Parameters:
+  EgressCidrBlock:
+    Default: '10.0.0.0/16'
+    Description: The CIDR Block for the VPC
+    Type: String
+  DevCidrBlock:
+    Default: '10.1.0.0/16'
+    Description: The CIDR Block for the VPC
+    Type: String
+  DevSubnetCidrBlock:
+    Default: '10.1.0.0/24'
+    Description: The CIDR Block for the Subnet
+    Type: String
+  ProdCidrBlock:
+    Default: '10.2.0.0/16'
+    Description: The CIDR Block for the VPC
+    Type: String
+  ProdSubnetCidrBlock:
+    Default: '10.2.0.0/24'
+    Description: The CIDR Block for the Subnet
+    Type: String
+  SharedCidrBlock:
+    Default: '10.3.0.0/16'
+    Description: The CIDR Block for the VPC
+    Type: String
+  SharedSubnetCidrBlock:
+    Default: '10.3.0.0/24'
+    Description: The CIDR Block for the Subnet
+    Type: String
+  StudentId:
+    Description: The student number
+    Type: String
+    AllowedPattern: "[0-9]+"
+    ConstraintDescription: Malformed input-Parameter StudentId must only contain numbers
+  AmazonLinuxAMI:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
+    Description: DO NOT CHANGE - AMI Used for test instance.
+  S3Bucket:
+    Description: The S3 bucket where the cloudformation templates are located
+    Type: String
+    Default: transit-gateway-lab
+
+Resources:
+
+  EgressVpc:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      Parameters: 
+        CidrBlock: !Ref EgressCidrBlock
+        StudentId: !Ref StudentId
+      Tags: 
+        - Key: Name
+          Value: egress-vpc
+      TemplateURL: !Sub https://s3.amazonaws.com/${S3Bucket}/egress-vpc.yaml
+  DevVpc:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      Parameters: 
+        CidrBlock: !Ref DevCidrBlock
+        SubnetCidrBlock: !Ref DevSubnetCidrBlock
+        StudentId: !Ref StudentId
+        Environment: dev
+        AmazonLinuxAMI: !Ref AmazonLinuxAMI
+      Tags: 
+        - Key: Name
+          Value: dev-vpc
+      TemplateURL: !Sub https://s3.amazonaws.com/${S3Bucket}/spoke-vpc.yaml
+  ProdVpc:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      Parameters: 
+        CidrBlock: !Ref ProdCidrBlock
+        SubnetCidrBlock: !Ref ProdSubnetCidrBlock
+        StudentId: !Ref StudentId
+        Environment: prod
+        AmazonLinuxAMI: !Ref AmazonLinuxAMI
+      Tags: 
+        - Key: Name
+          Value: prod-vpc
+      TemplateURL: !Sub https://s3.amazonaws.com/${S3Bucket}/spoke-vpc.yaml
+  SharedVpc:
+    Type: AWS::CloudFormation::Stack
+    Properties: 
+      Parameters: 
+        CidrBlock: !Ref SharedCidrBlock
+        SubnetCidrBlock: !Ref SharedSubnetCidrBlock
+        StudentId: !Ref StudentId
+        Environment: shared
+        AmazonLinuxAMI: !Ref AmazonLinuxAMI
+      Tags: 
+        - Key: Name
+          Value: shared-vpc
+      TemplateURL: !Sub https://s3.amazonaws.com/${S3Bucket}/spoke-vpc.yaml
