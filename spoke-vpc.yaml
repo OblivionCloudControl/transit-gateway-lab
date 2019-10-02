@@ -20,7 +20,7 @@ Parameters:
   StudentName:
     Description: Your name, all resources will contain your name so you can distinguish your own resources
     Type: String
-    AllowedPattern: "[a-Z]+"
+    AllowedPattern: "[A-z]+"
     ConstraintDescription: Malformed input-Parameter StudentName must only contain letters
   AmazonLinuxAMI:
     Type: String

@@ -115,6 +115,8 @@ First create the routing table for Egress and Shared VPC
 
 **Web Console:**
 
+***Shared Routing Table***
+
 Create the Transit Gateway Route Table for Egress and Shared VPC:
 - VPC > Transit Gateway Route > Create Transit Gateway Route Table
   - Name tag: \<StudentName\>-shared-routing-table
@@ -144,7 +146,10 @@ We also need the dynamic routes to all of the other VPCs (Dev, Prod and Shared),
     - Choose attachment to propagate: Select the Shared Transit Gateway Attachment that you just created (\<StudentName\>-shared-attachment)
 
 
-Select the Routes tab to see all 4 routes. The Egress VPC and Shared VPCs are ready to communicate, now we also need a Transit Gateway routing table for the Dev and Prod VPC:
+Select the Routes tab to see all 4 routes. The Egress VPC and Shared VPCs are ready to communicate.
+
+***Isolated Routing Table***
+We we also need a Transit Gateway routing table for the Dev and Prod VPC:
 - VPC > Transit Gateway Route > Create Transit Gateway Route
   - Name tag: \<StudentName\>-isolated-routing-table
   - Transit Gateway ID: Select the Transit Gateway that you created earlier (\<StudentName\>-transit-gateway)
