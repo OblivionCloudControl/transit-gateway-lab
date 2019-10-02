@@ -7,7 +7,7 @@ Metadata:
         default: Lab parameters
       Parameters:
         - S3Bucket
-        - StudentId
+        - StudentName
         - AmazonLinuxAMI
     - Label:
         default: Vpc and Subnet Parameters
@@ -50,11 +50,11 @@ Parameters:
     Default: '10.3.0.0/24'
     Description: The CIDR Block for the Subnet
     Type: String
-  StudentId:
-    Description: The student number
+  StudentName:
+    Description: Your name, all resources will contain your name so you can distinguish your own resources
     Type: String
-    AllowedPattern: "[0-9]+"
-    ConstraintDescription: Malformed input-Parameter StudentId must only contain numbers
+    AllowedPattern: "[a-Z]+"
+    ConstraintDescription: Malformed input-Parameter StudentName must only contain letters
   AmazonLinuxAMI:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2'
@@ -71,7 +71,7 @@ Resources:
     Properties: 
       Parameters: 
         CidrBlock: !Ref EgressCidrBlock
-        StudentId: !Ref StudentId
+        StudentName: !Ref StudentName
       Tags: 
         - Key: Name
           Value: egress-vpc
@@ -82,7 +82,7 @@ Resources:
       Parameters: 
         CidrBlock: !Ref DevCidrBlock
         SubnetCidrBlock: !Ref DevSubnetCidrBlock
-        StudentId: !Ref StudentId
+        StudentName: !Ref StudentName
         Environment: dev
         AmazonLinuxAMI: !Ref AmazonLinuxAMI
       Tags: 
@@ -95,7 +95,7 @@ Resources:
       Parameters: 
         CidrBlock: !Ref ProdCidrBlock
         SubnetCidrBlock: !Ref ProdSubnetCidrBlock
-        StudentId: !Ref StudentId
+        StudentName: !Ref StudentName
         Environment: prod
         AmazonLinuxAMI: !Ref AmazonLinuxAMI
       Tags: 
@@ -108,7 +108,7 @@ Resources:
       Parameters: 
         CidrBlock: !Ref SharedCidrBlock
         SubnetCidrBlock: !Ref SharedSubnetCidrBlock
-        StudentId: !Ref StudentId
+        StudentName: !Ref StudentName
         Environment: shared
         AmazonLinuxAMI: !Ref AmazonLinuxAMI
       Tags: 

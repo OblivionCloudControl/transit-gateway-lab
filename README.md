@@ -24,17 +24,15 @@ Go to Systems Manager on the AWS Web console in the eu-west-1 region.
 
 - Click on "Session Manager" under "Actions"
 - Click on "Start Session"
-- Select your Dev instance (studentxx-dev-instance) and click Start Session
+- Select your Dev instance (\<StudentName\>-dev-instance) and click Start Session
 
 - In Terminal Session window for Test Instance, now you can test the internet reachability via following shell commands:
   - Test the connection to the Internet:
     - ping 1.1.1.1
-    - links https://www.checkmyip.com
-    - NOTE: The Public IP Address displayed would be the NAT-GW from Egress VPC.
-  - Test the connection to the Prod VPC: 
-    - ping \<ip\> (lookup IP of studentxx-prod-instance in EC2 Management Console)
+    - NOTE: This will not give a response, because the VPC is still isolated
   - Test the connection to the Shared VPC:
-    - ping \<ip\> (lookup IP of studentxx-shared-instance in EC2 Management Console)
+    - ping \<ip\> (lookup IP of \<StudentName\>-shared-instance in EC2 Management Console)
+    - NOTE: This will not give a response, because the VPC is still isolated
 
 As you can see it does not work. We need to setup Transit Gateway, so the first step is to create a Transit Gateway
 
@@ -47,7 +45,7 @@ As you can see it does not work. We need to setup Transit Gateway, so the first 
 
 Go to VPC on the AWS Web console in the eu-west-1 region.
 - VPC > Transit Gateway > Create Transit Gateway
-  - Name: studentxx-transit-gateway
+  - Name: \<StudentName\>-transit-gateway
   - Amazon Side Asn: 64512 (leave default)
   - Default Route Table Association: disable (we don’t want to use the default Transit Gateway route table, we want to use custom ones)
   - Default Route Table Propagation: disable
@@ -67,38 +65,38 @@ The next step is to attach the different VPCs to the Transit Gateway, so we need
 
 Create the Transit Gateway Attachment for the Egress VPC:
 - VPC > Transit Gateway Attachments > Create Transit Gateway Attachment
-  - Transit Gateway ID: Select the Transit Gateway that you just created (studentxx-transit-gateway)
+  - Transit Gateway ID: Select the Transit Gateway that you just created (\<StudentName\>-transit-gateway)
   - Attachment type: VPC
-  - Attachment name tag: studentxx-egress-attachment
-  - VPC ID: studentxx-egress-vpc
-  - Subnet IDs: studentxx-egress-private1-subnet
+  - Attachment name tag: \<StudentName\>-egress-attachment
+  - VPC ID: \<StudentName\>-egress-vpc
+  - Subnet IDs: \<StudentName\>-egress-private1-subnet
   - Create
 
 Create the Transit Gateway Attachment for the Prod VPC:
 - VPC > Transit Gateway Attachments > Create Transit Gateway Attachment
-  - Transit Gateway ID: Select the Transit Gateway that you just created (studentxx-transit-gateway)
+  - Transit Gateway ID: Select the Transit Gateway that you just created (\<StudentName\>-transit-gateway)
   - Attachment type: VPC
-  - Attachment name tag: studentxx-prod-attachment
-  - VPC ID: studentxx-prod-vpc
-  - Subnet IDs: studentxx-prod-private1-subnet
+  - Attachment name tag: \<StudentName\>-prod-attachment
+  - VPC ID: \<StudentName\>-prod-vpc
+  - Subnet IDs: \<StudentName\>-prod-private1-subnet
   - Create
 
 Create the Transit Gateway Attachment for the Dev VPC:
 - VPC > Transit Gateway Attachments > Create Transit Gateway Attachment
-  - Transit Gateway ID: Select the Transit Gateway that you just created (studentxx-transit-gateway)
+  - Transit Gateway ID: Select the Transit Gateway that you just created (\<StudentName\>-transit-gateway)
   - Attachment type: VPC
-  - Attachment name tag: studentxx-dev-attachment
-  - VPC ID: studentxx-dev-vpc
-  - Subnet IDs: studentxx-dev-private1-subnet
+  - Attachment name tag: \<StudentName\>-dev-attachment
+  - VPC ID: \<StudentName\>-dev-vpc
+  - Subnet IDs: \<StudentName\>-dev-private1-subnet
   - Create
 
 Create the Transit Gateway Attachment for the Shared VPC:
 - VPC > Transit Gateway Attachments > Create Transit Gateway Attachment
-  - Transit Gateway ID: Select the Transit Gateway that you just created (studentxx-transit-gateway)
+  - Transit Gateway ID: Select the Transit Gateway that you just created (\<StudentName\>-transit-gateway)
   - Attachment type: VPC
-  - Attachment name tag: studentxx-shared-attachment
-  - VPC ID: studentxx-prod-vpc
-  - Subnet IDs: studentxx-prod-private1-subnet
+  - Attachment name tag: \<StudentName\>-shared-attachment
+  - VPC ID: \<StudentName\>-prod-vpc
+  - Subnet IDs: \<StudentName\>-prod-private1-subnet
   - Create
 
 ### Step-4 : Create Transit Gateway Routing tables 
@@ -116,58 +114,58 @@ First create the routing table for Egress and Shared VPC
 
 Create the Transit Gateway Route Table for Egress and Shared VPC:
 - VPC > Transit Gateway Route > Create Transit Gateway Route Table
-  - Name tag: studentxx-shared-routing-table
-  - Transit Gateway ID: Select the Transit Gateway that you created earlier (studentxx-transit-gateway)
+  - Name tag: \<StudentName\>-shared-routing-table
+  - Transit Gateway ID: Select the Transit Gateway that you created earlier (\<StudentName\>-transit-gateway)
   - Create
 
 Wait for the creation until the state becomes available (refresh). 
 
 Now we can associate the Egress and Shared VPC (attachment) to this routing table, so they will use this routing table when traffic is being directed to the Transit Gateway:
-- Select the route table (studentxx-shared-routing-table) > Associations tab > Create association
-  - Choose attachment to associate: Select the Egress Transit Gateway Attachment that you just created (studentxx-egress-attachment)
-- Select the route table (studentxx-shared-routing-table) > Associations tab > Create association
-  - Choose attachment to associate: Select the Shared Transit Gateway Attachment that you just created (studentxx-shared-attachment)
+- Select the route table (\<StudentName\>-shared-routing-table) > Associations tab > Create association
+  - Choose attachment to associate: Select the Egress Transit Gateway Attachment that you just created (\<StudentName\>-egress-attachment)
+- Select the route table (\<StudentName\>-shared-routing-table) > Associations tab > Create association
+  - Choose attachment to associate: Select the Shared Transit Gateway Attachment that you just created (\<StudentName\>-shared-attachment)
 
 The VPCs are ready to use the routing table, but the routing table does not contain any routes yet. For this shared routing table we need to create a static default route, because we want the Shared VPC to be able to connect to the Internet through the Egress VPC:
-- Select the route table (studentxx-shared-routing-table) > Routes tab > Create route
+- Select the route table (\<StudentName\>-shared-routing-table) > Routes tab > Create route
   - CIDR: 0.0.0.0/0
-  - Choose attachment: Select the Egress Transit Gateway Attachment that you just created (studentxx-egress-attachment)
+  - Choose attachment: Select the Egress Transit Gateway Attachment that you just created (\<StudentName\>-egress-attachment)
 
 We also need the dynamic routes to all of the other VPCs (Dev, Prod and Shared), so we need to create the propagation for each VPC:
-- Select the route table (studentxx-shared-routing-table) > Propagations tab:
+- Select the route table (\<StudentName\>-shared-routing-table) > Propagations tab:
   - Create propagation
-    - Choose attachment to propagate: Select the Shared Transit Gateway Attachment that you just created (studentxx-dev-attachment)
+    - Choose attachment to propagate: Select the Shared Transit Gateway Attachment that you just created (\<StudentName\>-dev-attachment)
   - Create propagation
-    - Choose attachment to propagate: Select the Shared Transit Gateway Attachment that you just created (studentxx-prod-attachment)
+    - Choose attachment to propagate: Select the Shared Transit Gateway Attachment that you just created (\<StudentName\>-prod-attachment)
   - Create propagation
-    - Choose attachment to propagate: Select the Shared Transit Gateway Attachment that you just created (studentxx-shared-attachment)
+    - Choose attachment to propagate: Select the Shared Transit Gateway Attachment that you just created (\<StudentName\>-shared-attachment)
 
 
 Select the Routes tab to see all 4 routes. The Egress VPC and Shared VPCs are ready to communicate, now we also need a Transit Gateway routing table for the Dev and Prod VPC:
 - VPC > Transit Gateway Route > Create Transit Gateway Route
-  - Name tag: studentxx-isolated-routing-table
-  - Transit Gateway ID: Select the Transit Gateway that you created earlier (studentxx-transit-gateway)
+  - Name tag: \<StudentName\>-isolated-routing-table
+  - Transit Gateway ID: Select the Transit Gateway that you created earlier (\<StudentName\>-transit-gateway)
   - Create
 
 Wait for the creation until the state becomes available (refresh). 
 
 Now we can associate the Dev and Prod VPC (attachment) to this routing table, so they will use this routing table when traffic is being directed to the Transit Gateway:
-  - Select the route table (studentxx-isolated-routing-table) > Associations tab > Create association
-    - Choose attachment to associate: Select the Dev Transit Gateway Attachment that you just created (studentxx-dev-attachment)
-  - Select the route table (studentxx-isolated-routing-table) > Associations tab > Create association
-    - Choose attachment to associate: Select the Prod Transit Gateway Attachment that you just created (studentxx-prod-attachment)
+  - Select the route table (\<StudentName\>-isolated-routing-table) > Associations tab > Create association
+    - Choose attachment to associate: Select the Dev Transit Gateway Attachment that you just created (\<StudentName\>-dev-attachment)
+  - Select the route table (\<StudentName\>-isolated-routing-table) > Associations tab > Create association
+    - Choose attachment to associate: Select the Prod Transit Gateway Attachment that you just created (\<StudentName\>-prod-attachment)
 
 The Dev and Prod VPCs are ready to use the routing table, but the routing table does not contain any routes yet. For this isolated routing table we need to create a static default route, because we want the VPCs to be able to connect to the Internet through the Egress VPC:
-  - Select the route table (studentxx-isolated-routing-table) > Routes tab > Create route
+  - Select the route table (\<StudentName\>-isolated-routing-table) > Routes tab > Create route
     - CIDR: 0.0.0.0/0
-    - Choose attachment: Select the Egress Transit Gateway Attachment that you just created (studentxx-egress-attachment)
+    - Choose attachment: Select the Egress Transit Gateway Attachment that you just created (\<StudentName\>-egress-attachment)
 
 We also need the dynamic routes to the Shared VPC, because the Dev and Prod VPC need to communicate to Shared VPC. We need to create the propagation for the Shared VPC:
-  - Select the route table (studentxx-isolated-routing-table) > Propagations tab:
+  - Select the route table (\<StudentName\>-isolated-routing-table) > Propagations tab:
     - Create propagation
-      - Choose attachment to propagate: Select the Shared Transit Gateway Attachment that you just created (studentxx-shared-attachment)
+      - Choose attachment to propagate: Select the Shared Transit Gateway Attachment that you just created (\<StudentName\>-shared-attachment)
 
-### Step-6 : Create routes to the from the VPC to the Transit Gateway
+### Step-5 : Create routes to the from the VPC to the Transit Gateway
 
   ![Create Routes to Transit Gateway](images/lab-create-vpc-routes.png)
 
@@ -178,38 +176,39 @@ Now the Transit Gateway has been setup correctly, we still cannot connect to the
 VPC > Route Tables > Filter on your name (student):
 - Select the Dev Routing table (student12-dev-route-table) > Routes tab > Edit routes
   - Destination: 0.0.0.0/0
-  - Target: Transit Gateway (studentxx-transit-gateway)
+  - Target: Transit Gateway (\<StudentName\>-transit-gateway)
 - Select the Prod Routing table (student12-prod-route-table) > Routes tab > Edit routes
   - Destination: 0.0.0.0/0
-  - Target: Transit Gateway (studentxx-transit-gateway)
+  - Target: Transit Gateway (\<StudentName\>-transit-gateway)
 - Select the Shared Routing table (student12-shared-route-table) > Routes tab > Edit routes
   - Destination: 0.0.0.0/0
-  - Target: Transit Gateway (studentxx-transit-gateway)
+  - Target: Transit Gateway (\<StudentName\>-transit-gateway)
 
 For the Egress VPC we need a route back to different VPC. We will add a specific route for the private ip space. Please note that we need to add the route to the public route table, because the NAT Gateway has an attachment in the public subnet. 
-VPC > Route Tables > Filter on your name (student):
-- Select the Egress Routing table (student12-egress-public1-route-table) > Routes tab > Edit routes
-  - Destination: 10.0.0.0/8
-  - Target: Transit Gateway (studentxx-transit-gateway)
+- VPC > Route Tables > Filter on your name (student):
+  - Select the Egress Routing table (student12-egress-public1-route-table) > Routes tab > Edit routes
+    - Destination: 10.0.0.0/8
+    - Target: Transit Gateway (\<StudentName\>-transit-gateway)
 
-### Step-5 : Test & Play ! 
+### Step-6 : Test & Play ! 
 
 **Web Console:**
 Go to Systems Manager on the AWS Web console in the eu-west-1 region.
 
 - Click on "Session Manager" under "Actions"
 - Click on "Start Session"
-- Select your Dev instances (studentxx-dev-instance) and click Start Session
+- Select your Dev instances (\<StudentName\>-dev-instance) and click Start Session
 
 - In Terminal Session window for Test Instance, now you can test the internet reachability via following shell commands:
   - Test the connection to the Internet:
     - ping 1.1.1.1
-    - links https://www.checkmyip.com
+    - curl ipinfo.io/ip
     - NOTE: The Public IP Address displayed would be the NAT-GW from Egress VPC.
   - Test the connection to the Prod VPC: 
-    - ping \<ip\> (lookup IP of studentxx-prod-instance in EC2 Management Console)
+    - ping \<ip\> (lookup IP of \<StudentName\>-prod-instance in EC2 Management Console)
+    - NOTE: This will not give a response, because Dev is not allowed to communicate to Prod
   - Test the connection to the Shared VPC:
-    - ping \<ip\> (lookup IP of studentxx-shared-instance in EC2 Management Console)
+    - ping \<ip\> (lookup IP of \<StudentName\>-shared-instance in EC2 Management Console)
 
 
 
