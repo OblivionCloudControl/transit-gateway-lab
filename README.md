@@ -1,3 +1,6 @@
+Deploy the VPCs:
+aws cloudformation create-stack --stack-name \<StudentName\>-transit-vpc-lab --template-url https://transit-gateway-lab.s3-eu-west-1.amazonaws.com/lab-transit-vpc.yml --parameter ParameterKey=StudentName,ParameterValue=\<StudentName\> --region eu-west-1 --capabilities CAPABILITY_IAM
+
 ## Summary:
 
 In this lab we will learn how to build and run a centralised NAT/Egress solution using Transit Gateway. We have deployed 4 different VPCs in the same region and also in the same account. We have a Dev, Prod, Shared and Egress VPC. These VPCs could be located in different AWS accounts, but for this lab it is more convenient to have it in a single account. 
