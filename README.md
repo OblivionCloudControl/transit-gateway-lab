@@ -149,6 +149,7 @@ We also need the dynamic routes to all of the other VPCs (Dev, Prod and Shared),
 Select the Routes tab to see all 4 routes. The Egress VPC and Shared VPCs are ready to communicate.
 
 ***Isolated Routing Table***
+
 We we also need a Transit Gateway routing table for the Dev and Prod VPC:
 - VPC > Transit Gateway Route > Create Transit Gateway Route
   - Name tag: \<StudentName\>-isolated-routing-table
