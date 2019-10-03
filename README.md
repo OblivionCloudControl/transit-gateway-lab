@@ -4,7 +4,7 @@ aws cloudformation create-stack --stack-name \<StudentName\>-transit-vpc-lab --t
 
 ## Summary:
 
-In this lab we will learn how to build and run a centralised NAT/Egress solution using Transit Gateway. The cloudformation template will delpoy 4 different VPCs in the same region and also in the same account. We have a Dev, Prod, Shared and Egress VPC. These VPCs could be located in different AWS accounts, but for this lab it is more convenient to have it in a single account. 
+In this lab we will learn how to build and run a centralised NAT/Egress solution using Transit Gateway. The cloudformation template will deploy 4 different VPCs in the same region and also in the same account. We have a Dev, Prod, Shared and Egress VPC. These VPCs could be located in different AWS accounts, but for this lab it is more convenient to have it in a single account. 
 
 There is a requirement to be able to connect to the internet from the three VPCs (Dev, Prod and Shared) which are hosting EC2 instances. In this case we want a single egress point because for example we want to consolidate the NAT gateways or we have specific security requirements. We can’t use VPC peering, because transitive routing is not supported. 
 
