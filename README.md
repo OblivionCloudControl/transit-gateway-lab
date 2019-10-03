@@ -1,9 +1,10 @@
 Deploy the VPCs:
+
 aws cloudformation create-stack --stack-name \<StudentName\>-transit-vpc-lab --template-url https://transit-gateway-lab.s3-eu-west-1.amazonaws.com/lab-transit-vpc.yml --parameter ParameterKey=StudentName,ParameterValue=\<StudentName\> --region eu-west-1 --capabilities CAPABILITY_IAM
 
 ## Summary:
 
-In this lab we will learn how to build and run a centralised NAT/Egress solution using Transit Gateway. We have deployed 4 different VPCs in the same region and also in the same account. We have a Dev, Prod, Shared and Egress VPC. These VPCs could be located in different AWS accounts, but for this lab it is more convenient to have it in a single account. 
+In this lab we will learn how to build and run a centralised NAT/Egress solution using Transit Gateway. The cloudformation template will delpoy 4 different VPCs in the same region and also in the same account. We have a Dev, Prod, Shared and Egress VPC. These VPCs could be located in different AWS accounts, but for this lab it is more convenient to have it in a single account. 
 
 There is a requirement to be able to connect to the internet from the three VPCs (Dev, Prod and Shared) which are hosting EC2 instances. In this case we want a single egress point because for example we want to consolidate the NAT gateways or we have specific security requirements. We can’t use VPC peering, because transitive routing is not supported. 
 
@@ -56,8 +57,6 @@ Go to VPC on the AWS Web console in the eu-west-1 region.
   - Create
 
 
-
-
 ### Step-3 : Attach VPCs to Transit Gateway
 
 The next step is to attach the different VPCs to the Transit Gateway, so we need to create Transit Gateway Attachments for each VPC:
@@ -106,9 +105,9 @@ Create the Transit Gateway Attachment for the Shared VPC:
 
 Now that each VPC is attached to the Transit Gateway, we need to setup a routing tables that meet our requirements. When we created the Transit Gateway we did not select the default route table association, because that would make it possible for all VPCs to route to each other and we need a strict separation between Prod and Dev. We need to create two different Transit Gateway routing tables: 
 - one for Egress VPC and Shared VPC because they need a route to all VPCs 
-- one for Dev and Prod VPC because they need the routes to the Egress and Shared VPCs only, because we don’t include routes to Dev and Prod VPC they are not able to communicate to each other
+- one for Dev and Prod VPC because they need the routes to the Egress and Shared VPCs only. Because we don’t include routes to Dev and Prod VPC they are not able to communicate to each other.
 
-First create the routing table for Egress and Shared VPC
+First create the routing table for Egress and Shared VPC.
 
   ![Create Transit Gateway Routing Tables](images/lab-create-routing-tables.png)
 
